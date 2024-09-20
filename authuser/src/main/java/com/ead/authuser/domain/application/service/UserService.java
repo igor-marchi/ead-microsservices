@@ -1,13 +1,33 @@
 package com.ead.authuser.domain.application.service;
 
+import com.ead.authuser.core.entity.User;
 import com.ead.authuser.core.repository.IUserRepository;
 import com.ead.authuser.core.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService implements IUserService {
 
     @Autowired
     IUserRepository userRepository;
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public Optional<User> findById(UUID userId) {
+        return userRepository.findById(userId);
+    }
+
+    @Override
+    public void delete(User user) {
+        userRepository.delete(user);
+    }
 }

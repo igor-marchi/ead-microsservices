@@ -1,0 +1,20 @@
+server:
+  port: 3000
+
+spring:
+  application:
+    name: authuser
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/ead_authuser
+    username: admin
+    password: 123
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      jdbc:
+        lob:
+          non_contextual_creation: true
+    properties:
+      hibernate:
+        show_sql: true

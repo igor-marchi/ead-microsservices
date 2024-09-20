@@ -1,0 +1,12 @@
+services:
+  postgres:
+    image: postgres
+    container_name: decoder_ead_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql

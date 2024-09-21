@@ -13,4 +13,10 @@ public interface IUserService {
     Optional<User> findById(UUID userId);
 
     void delete(User userOptional);
+
+    void save(User user);
+
+    boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
 }

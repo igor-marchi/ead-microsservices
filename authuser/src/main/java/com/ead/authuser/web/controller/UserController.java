@@ -3,6 +3,7 @@ package com.ead.authuser.web.controller;
 import com.ead.authuser.core.entity.User;
 import com.ead.authuser.core.service.IUserService;
 import com.ead.authuser.web.controller.dto.UserDto;
+import com.ead.authuser.web.controller.specification.SpecificationTemplate;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,9 @@ import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/users")
@@ -36,9 +40,15 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<Page<User>> getAllUsers(
+            SpecificationTemplate.UserSpec spec,
             @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        Page<User> userPage = userService.findAll(pageable);
+        Page<User> userPage = userService.findAll(spec, pageable);
+        if (!userPage.isEmpty()) {
+            for (User user : userPage.toList()) {
+                user.add(linkTo(methodOn(UserController.class).getUser(user.getId())).withSelfRel());
+            }
+        }
         return ResponseEntity.status(HttpStatus.OK).body(userPage);
     }
 
@@ -106,5 +116,3 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 }
-
-// f27

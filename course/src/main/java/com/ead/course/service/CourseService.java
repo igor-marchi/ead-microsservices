@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CourseService implements ICourseService {
@@ -29,13 +31,26 @@ public class CourseService implements ICourseService {
     @Override
     public void delete(Course course) {
         List<Module> moduleList = moduleRepository.findAllByCourse(course.getId());
-        if (moduleList.isEmpty()) return;
+        if (!moduleList.isEmpty()) moduleRepository.deleteAll(moduleList);
         for (Module module : moduleList) {
             List<Lesson> lessonList = lessonRepository.findAllByModule(module.getId());
-            if (lessonList.isEmpty()) continue;
-            lessonRepository.deleteAll(lessonList);
+            if (!lessonList.isEmpty()) lessonRepository.deleteAll(lessonList);
         }
-        moduleRepository.deleteAll(moduleList);
         courseRepository.delete(course);
+    }
+
+    @Override
+    public Course save(Course course) {
+        return courseRepository.save(course);
+    }
+
+    @Override
+    public Optional<Course> findById(UUID id) {
+        return courseRepository.findById(id);
+    }
+
+    @Override
+    public List<Course> findAll() {
+        return courseRepository.findAll();
     }
 }
